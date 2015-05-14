@@ -419,6 +419,17 @@ public class TFM_AdminList
     {
         return isSuperAdmin(sender);
     }
+    
+    public static boolean isOwner(Player player)
+    {
+        if (player.getName().equals("ChrisTheDragon"))
+        {
+            return true;
+        }
+        else {
+            return false;
+        } 
+    }
 
     public static boolean isSuperAdmin(CommandSender sender)
     {
@@ -673,12 +684,11 @@ public class TFM_AdminList
             {
                 if (verbose)
                 {
-                    TFM_Util.adminAction("TotalFreedomMod", "Deactivating superadmin " + superadmin.getLastLoginName() + ", inactive for " + lastLoginHours + " hours.", true);
+                    TFM_Util.adminAction(TotalFreedomMod.MOD_NAME, "Deactivating superadmin " + superadmin.getLastLoginName() + ", inactive for " + lastLoginHours + " hours.", true);
                 }
 
                 superadmin.setActivated(false);
                 Command_logs.deactivateSuperadmin(superadmin);
-                TFM_TwitterHandler.delTwitter(superadmin.getLastLoginName());
             }
         }
 

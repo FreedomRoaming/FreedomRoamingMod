@@ -41,18 +41,20 @@ public class TFM_ServerListener implements Listener
             event.setMotd(ChatColor.RED + "Server is full.");
             return;
         }
-
-        if (!TFM_ConfigEntry.SERVER_COLORFUL_MOTD.getBoolean())
+        
+        if (TFM_ConfigEntry.ENABLE_CHAOS.getBoolean())
         {
-            event.setMotd(TFM_Util.colorize(TFM_ConfigEntry.SERVER_MOTD.getString()
-                    .replace("%mcversion%", TFM_ServerInterface.getVersion())));
+            event.setMotd(ChatColor.RED + "Server is currently in chaos mode, prepare for some crazy s**t!");
             return;
         }
+        
         // Colorful MOTD
+
+        String message = String.format("Welcome to FreedomRoaming%s! - Fun, Free and Easy! Running on Spigot for Minecraft 1.8!", TFM_Util.getPlayerFromIp(ip));
 
         final StringBuilder motd = new StringBuilder();
 
-        for (String word : TFM_ConfigEntry.SERVER_MOTD.getString().replace("%mcversion%", TFM_ServerInterface.getVersion()).split(" "))
+        for (String word : message.split(" "))
         {
             motd.append(TFM_Util.randomChatColor()).append(word).append(" ");
         }

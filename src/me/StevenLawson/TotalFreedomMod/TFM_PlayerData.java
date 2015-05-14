@@ -101,10 +101,13 @@ public class TFM_PlayerData
     private BukkitTask lockupScheduleTask = null;
     private String lastMessage = "";
     private boolean inAdminchat = false;
+    private boolean inSeniorAdminchat = false;
     private boolean allCommandsBlocked = false;
     private boolean verifiedSuperadminId = false;
     private String lastCommand = "";
     private boolean cmdspyEnabled = false;
+    private boolean inGod = false;
+    private boolean isDoubleJumper = false;
     private String tag = null;
     private int warningCount = 0;
 
@@ -124,6 +127,30 @@ public class TFM_PlayerData
     {
         return uuid;
     }
+
+        // Start FOPM Changes //
+    
+    public boolean inGod()
+    {
+        return this.inGod;
+    }
+
+    public void setGod(boolean state)
+    {
+        this.inGod = state;
+    }
+
+    public boolean isDoubleJumper()
+    {
+        return this.isDoubleJumper;
+    }
+
+    public void setDoubleJumper(boolean state)
+    {
+        this.isDoubleJumper = state;
+    }
+    
+    // End FOPM Changes //
 
     public boolean isOrbiting()
     {
@@ -234,7 +261,7 @@ public class TFM_PlayerData
             @Override
             public void run()
             {
-                TFM_Util.adminAction("TotalFreedom", "Unfreezing " + player.getName(), false);
+                TFM_Util.adminAction("FreedomRoaming", "Unfreezing " + player.getName(), false);
                 setFrozen(false);
             }
 
@@ -451,6 +478,16 @@ public class TFM_PlayerData
     public String getLastMessage()
     {
         return lastMessage;
+    }
+    
+    public void setSeniorAdminChat(boolean inSeniorAdminchat)
+    {
+        this.inSeniorAdminchat = inSeniorAdminchat;
+    }
+
+    public boolean inSeniorAdminChat()
+    {
+        return this.inSeniorAdminchat;
     }
 
     public void setAdminChat(boolean inAdminchat)

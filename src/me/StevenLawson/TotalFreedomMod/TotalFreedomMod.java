@@ -8,8 +8,6 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
-import me.StevenLawson.TotalFreedomMod.Bridge.TFM_BukkitTelnetListener;
-import me.StevenLawson.TotalFreedomMod.Bridge.TFM_WorldEditListener;
 import me.StevenLawson.TotalFreedomMod.Commands.TFM_CommandHandler;
 import me.StevenLawson.TotalFreedomMod.Commands.TFM_CommandLoader;
 import me.StevenLawson.TotalFreedomMod.Config.TFM_ConfigEntry;
@@ -18,9 +16,11 @@ import me.StevenLawson.TotalFreedomMod.Listener.TFM_BlockListener;
 import me.StevenLawson.TotalFreedomMod.Listener.TFM_EntityListener;
 import me.StevenLawson.TotalFreedomMod.Listener.TFM_PlayerListener;
 import me.StevenLawson.TotalFreedomMod.Listener.TFM_ServerListener;
+import me.StevenLawson.TotalFreedomMod.Listener.TFM_TelnetListener;
 import me.StevenLawson.TotalFreedomMod.Listener.TFM_WeatherListener;
 import me.StevenLawson.TotalFreedomMod.World.TFM_AdminWorld;
 import me.StevenLawson.TotalFreedomMod.World.TFM_Flatlands;
+import org.bukkit.ChatColor;
 import org.bukkit.Server;
 import org.bukkit.World;
 import org.bukkit.command.Command;
@@ -45,12 +45,21 @@ public class TotalFreedomMod extends JavaPlugin
     public static final String PROTECTED_AREA_FILENAME = "protectedareas.dat";
     public static final String SAVED_FLAGS_FILENAME = "savedflags.dat";
     //
+    public static final String MOD_NAME = "FreedomRoamingMod";
+    public static final String OWNER = "ChrisTheDragon";
+    public static final String MSG_NO_PERMS = ChatColor.YELLOW + "You do not have permission to use this command.";
+    public static final String YOU_ARE_OP = ChatColor.YELLOW + "You are now op!";
+    public static final String CAKE_LYRICS = "But there's no sense crying over every mistake. You just keep on trying till you run out of cake.";
+    public static final String COOKIE_LYRICS = "But there's no sense crying over every mistake. You just keep on trying till you run out of cookies.";
+    public static final String NOT_FROM_CONSOLE = "This command may not be used from the console.";
+    public static final String PLAYER_NOT_FOUND = ChatColor.GRAY + "Player not found!";
+    //
     @Deprecated
     public static final String YOU_ARE_NOT_OP = me.StevenLawson.TotalFreedomMod.Commands.TFM_Command.YOU_ARE_NOT_OP;
     //
     public static String buildNumber = "1";
     public static String buildDate = TotalFreedomMod.buildDate = TFM_Util.dateToString(new Date());
-    public static String buildCreator = "Unknown";
+    public static String buildCreator = "tylerhyperHD";
     //
     public static Server server;
     public static TotalFreedomMod plugin;
@@ -79,6 +88,7 @@ public class TotalFreedomMod extends JavaPlugin
     {
         TFM_Log.info("Made by Madgeek1450 and Prozza");
         TFM_Log.info("Compiled " + buildDate + " by " + buildCreator);
+        TFM_Log.info("FreedomRoamingMod by tylerhyperHD");
 
         final TFM_Util.MethodTimer timer = new TFM_Util.MethodTimer();
         timer.start();
@@ -116,10 +126,7 @@ public class TotalFreedomMod extends JavaPlugin
         pm.registerEvents(new TFM_PlayerListener(), plugin);
         pm.registerEvents(new TFM_WeatherListener(), plugin);
         pm.registerEvents(new TFM_ServerListener(), plugin);
-
-        // Bridge
-        pm.registerEvents(new TFM_BukkitTelnetListener(), plugin);
-        pm.registerEvents(new TFM_WorldEditListener(), plugin);
+        pm.registerEvents(new TFM_TelnetListener(), plugin);
 
         try
         {
@@ -167,7 +174,6 @@ public class TotalFreedomMod extends JavaPlugin
         // Start services
         TFM_ServiceChecker.start();
         TFM_HTTPD_Manager.start();
-        TFM_FrontDoor.start();
 
         timer.update();
 
@@ -204,7 +210,6 @@ public class TotalFreedomMod extends JavaPlugin
         TFM_HTTPD_Manager.stop();
         TFM_BanManager.save();
         TFM_UuidManager.close();
-        TFM_FrontDoor.stop();
 
         server.getScheduler().cancelTasks(plugin);
 

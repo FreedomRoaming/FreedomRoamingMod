@@ -6,21 +6,14 @@
 # Generic server information
 server:
   # You should change this to your server's name
-  name: TotalFreedom
+  name: FreedomRoaming
 
   # The address your server is located at. Please do not include the port.
   address: play.totalfreedom.me
 
-  # Shown at the server list
-  motd: TotalFreedom &8- Minecraft %mcversion%
-
   # Every word in the MOTD will be a different color unless prefixed by a color code
   colorful_motd: true
-
-  # All players who show up as owner
-  owners:
-    - markbyron
-
+  
   # URL players should appeal for bans at
   ban_url: http://totalfreedom.boards.net/
 
@@ -84,58 +77,67 @@ allow:
 #
 blocked_commands:
   # Disabled commands
-  - 'n:b:/time:Server-side time changing is disabled. Please use /ptime to set your own personal time.'
-  - 'n:b:/gamemode:Use /creative and /survival to set your gamemode.'
-  - 'n:b:/gamerule:_'
-  - 'n:b:/ban:_'
-  - 'n:b:/pardon:_'
-  - 'n:b:/ban-ip:_'
-  - 'n:b:/pardon-ip:_'
-  - 'n:b:/toggledownfall:_'
-  - 'n:b:/effect:Please use /potion to set effects.'
-  - 'n:b:/enderchest:_'
-  - 'n:b:/spreadplayers:_'
-  - 'n:b:/execute:_'
+  - 'n:b:/time:&a This is blocked'
+  - 'n:b:/gamemode:&a This is blocked'
+  - 'n:b:/gamerule:&a This is blocked'
+  - 'n:b:/ban:&a This is blocked'
+  - 'n:b:/pt:&a This is blocked'
+  - 'n:b:/powertool:&a This is blocked'
+  - 'n:b:/epowertool:&a This is blocked'
+  - 'n:b:/pardon:&a This is blocked'
+  - 'n:b:/ban-ip:&a This is blocked'
+  - 'n:b:/pardon-ip:&a This is blocked'
+  - 'n:b:/toggledownfall:&a This is blocked'
+  - 'n:b:/effect:&a This is blocked'
+  - 'n:b:/enderchest:&a This is blocked'
+  - 'n:b:/bukkit:&a This is blocked'
+  - 'n:b:/banip:&a Nice try, how about "/glist ban"'
+  - 'n:u:/fg:&a This is blocked'
+  - 'n:u:/kickall:&a This is blocked'
+  - 'n:b:/bcast:&a This is blocked'
+  - 'n:b:/banlist:&a Did you mean "/tfbanlist"'
+  - 'n:b:/ipbanlist:&a Did you mean "/tfipbanlist"'
+  - 'n:u:/cb:&a This is blocked'
+
 
   # Superadmin commands
+  - 's:b:/deopall:_'
   - 's:b:/kick:_'
+  - 's:b:/co:Let an admin do this for you.'
+  - 's:b:/core:Let an admin do this for you.'
+  - 's:b:/coreprotect:Let an admin do this for you.'
+  - 's:b:/mute:_'
+  - 's:u:/v:_'
+  - 's:b:/give:Please use "/i" instead'
   - 's:b:/socialspy:_'
   - 's:b:/kill:_'
   - 's:b://generate:_'
   - 's:b://:_'
   - 's:b:/superpickaxe:_'
   - 's:b:/brush:_'
-  - 's:b:/size:_'
-  - 's:b://mask:_'
   - 's:b:/mat:_'
   - 's:b:/tool:_'
   - 's:b://butcher:_'
-  - 's:b:/scoreboard:_'
-  - 's:b:/setspawn:_'
-  - 's:b://snow:_'
-  - 's:b:/tellraw:_'
-  - 's:b:/forestgen:_'
-  - 's:b:/setidletimeout:_'
-  - 's:b:/mail sendall:_'
-  - 's:b:/eco reset:_'
-  - 's:b:/mask:_'
-  - 's:b:/gmask:_'
-  - 's:b:/lrbuild:_'
-  - 's:b:/defaultgamemode:_'
-  - 's:b:/reload:_'
-  - 's:b:/title:_'
-  - 's:b:/worldborder:_'
-  - 's:b:/weather:_'
-  - 's:b:/tpall:_'
-  - 's:b:/setblock:_'
-  - 's:b:/green:_'
+  - 's:b:/scoreboard:Sorry, this command for for Super Administrators and above.'
+  - 's:b:/setspawn:You are able to perform "/sethome" instead.'
+  - 's:b:/tpo:Please use "/tp" instead of "/tpo"'
+  - 's:b:/tpohere:Please use "/tpahere" instead of "/tpohere"'
+  - 's:b:/tphere:Please use "/tpahere" instead of "/tphere"'
 
   # Superadmin commands - Auto-eject
-  - 's:a:/save-all:_'
-  - 's:a:/save-on:_'
-  - 's:a:/save-off:_'
-  - 's:a:/clearhistory:_'
-  - 's:a:/restart:_'
+  - 's:a:/stop'
+  - 's:a:/reload'
+  - 's:a:/save-all'
+  - 's:a:/save-on'
+  - 's:a:/save-off'
+  - 's:a:/clearhistory'
+  - 's:a:/nuke'
+  - 's:a:/mat'
+  - 's:a://snow'
+
+    # Spigot commands
+  - 's:a:/restart'
+  - 's:b:/setblock'
 
 # Automatically wipe dropped objects
 auto_wipe: true
@@ -163,6 +165,9 @@ disable:
 landmines_enabled: false
 mp44_enabled: false
 tossmob_enabled: false
+adminworld_enabled: true
+enable_chaos: false
+training_mode: false
 
 # Moblimiter
 moblimiter:
@@ -208,32 +213,14 @@ announcer:
   interval: 600
 
   # Prefix for all announcements
-  prefix: '&5[&eTotalFreedom&5] &b'
+  prefix: '&5[&FreedomRoaming&5] &b'
 
   announcements:
-    - 'Be sure to visit our forums at &6http://totalfreedom.boards.net/'
-    - 'You can always review the server rules here: &6http://totalfreedom.me/'
     - 'If you are not OP, be sure to ask!'
     - 'Somebody breaking the rules?  Report it!  /report <user> <reason>'
     - 'Griefing is not allowed!'
     - 'Hacking is allowed!'
-    - 'Interested in becoming admin? Do "/ai" for more information!'
-    - 'You may view all online administrators via "/list -a"'
-    - 'Save your buildings via WorldEdit!  http://totalfreedom.me for more information!'
-    - 'Famous players, such as Notch, are always fake!  We are an offline/cracked server!'
-    - 'You may contact TotalFreedoms Support on Twitter!  pravi.us/nGS'
-    - 'You may download TotalFreedomMod here: pravi.us/V8c'
-    - 'MarkByron is TotalFreedoms owner.'
-    - 'Server lagging?  Check the lag via "/tps"'
-    - 'You are allowed to record and stream videos on TotalFreedom :D'
-    - 'An admin abusing?  Report it! pravi.us/vfa'
-    - 'Player vs Player while in creative/god mode it forbidden!'
-    - 'Spawn killing is forbidden!'
-    - 'Invisible potions are allowed!'
-    - 'Serial griefing and trolling will result in permanently being banned!'
-    - 'TotalFreedom does not accept any form of donations!'
-    - 'Racism, Nazism, and Sexism is strictly forbidden!'
-    - 'Join our Mumble server! IP: 64.34.202.140:2862'
+
 
 # Players who cannot be banned by username
 unbannable_usernames:

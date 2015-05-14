@@ -38,12 +38,12 @@ public class Module_list extends TFM_HTTPD_Module
                     prefix = "[SA]";
                 }
 
-                if (TFM_Util.DEVELOPERS.contains(player.getName()))
+                if (TFM_Util.FR_DEVELOPERS.contains(player.getName()))
                 {
                     prefix = "[Dev]";
                 }
 
-                if (player.getName().equals("markbyron"))
+                if (TFM_AdminList.isOwner(player))
                 {
                     prefix = "[Owner]";
                 }
