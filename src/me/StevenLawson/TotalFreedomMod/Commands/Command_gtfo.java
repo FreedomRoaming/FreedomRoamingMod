@@ -1,11 +1,10 @@
 package me.StevenLawson.TotalFreedomMod.Commands;
 
-import me.StevenLawson.TotalFreedomMod.Bridge.TFM_WorldEditBridge;
 import me.StevenLawson.TotalFreedomMod.TFM_Ban;
 import me.StevenLawson.TotalFreedomMod.TFM_BanManager;
-import me.StevenLawson.TotalFreedomMod.TFM_RollbackManager;
 import me.StevenLawson.TotalFreedomMod.TFM_Util;
 import me.StevenLawson.TotalFreedomMod.TFM_UuidManager;
+import me.StevenLawson.TotalFreedomMod.TotalFreedomMod;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.bukkit.ChatColor;
@@ -16,7 +15,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 @CommandPermissions(level = AdminLevel.SUPER, source = SourceType.BOTH)
-@CommandParameters(description = "Makes someone GTFO (deop and ip ban by username).", usage = "/<command> <partialname>")
+@CommandParameters(description = "Makes someone GTFO (deop and ip ban by username).", usage = "/<command> <partialname>", aliases = "ban")
 public class Command_gtfo extends TFM_Command
 {
     @Override
@@ -31,7 +30,7 @@ public class Command_gtfo extends TFM_Command
 
         if (player == null)
         {
-            playerMsg(TFM_Command.PLAYER_NOT_FOUND, ChatColor.RED);
+            playerMsg(TotalFreedomMod.PLAYER_NOT_FOUND, ChatColor.RED);
             return true;
         }
 
@@ -41,10 +40,11 @@ public class Command_gtfo extends TFM_Command
             reason = StringUtils.join(ArrayUtils.subarray(args, 1, args.length), " ");
         }
 
-        TFM_Util.bcastMsg(player.getName() + " has been a VERY naughty, naughty boy.", ChatColor.RED);
+        TFM_Util.bcastMsg(player.getName() + " has been a VERY naughty, naughty person.", ChatColor.RED);
 
+        // Silently rollback the user with CoreProtect
         server.dispatchCommand(sender, "co rb u:" + player.getName() + " t:24h r:global #silent");
-
+   
         // deop
         player.setOp(false);
 
@@ -67,20 +67,7 @@ public class Command_gtfo extends TFM_Command
 
         // ban IP address:
         String ip = TFM_Util.getFuzzyIp(player.getAddress().getAddress().getHostAddress());
-
-        final StringBuilder bcast = new StringBuilder()
-                .append(ChatColor.RED)
-                .append("Banning: ")
-                .append(player.getName())
-                .append(", IP: ")
-                .append(ip);
-
-        if (reason != null)
-        {
-            bcast.append(" - Reason: ").append(ChatColor.YELLOW).append(reason);
-        }
-
-        TFM_Util.bcastMsg(bcast.toString());
+        TFM_Util.bcastMsg(String.format("Banning: %s, IP: %s ", player.getName(), ip) + (reason != null ? ("- Reason: " + ChatColor.YELLOW + reason) : ""), ChatColor.RED);
 
         TFM_BanManager.addIpBan(new TFM_Ban(ip, player.getName(), sender.getName(), null, reason));
 

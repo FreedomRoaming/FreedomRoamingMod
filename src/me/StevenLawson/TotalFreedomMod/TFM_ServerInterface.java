@@ -30,11 +30,9 @@ public class TFM_ServerInterface
     {
         String[] whitelisted = MinecraftServer.getServer().getPlayerList().getWhitelisted();
         int size = whitelisted.length;
-        for (EntityPlayer player : MinecraftServer.getServer().getPlayerList().players)
-        {
+        for (EntityPlayer player : MinecraftServer.getServer().getPlayerList().players) {
             MinecraftServer.getServer().getPlayerList().getWhitelist().remove(player.getProfile());
         }
-
         try
         {
             MinecraftServer.getServer().getPlayerList().getWhitelist().save();
@@ -161,16 +159,6 @@ public class TFM_ServerInterface
             }
         }
 
-        // Whitelist
-        if (isWhitelisted())
-        {
-            if (!getWhitelisted().contains(username.toLowerCase()))
-            {
-                event.disallow(Result.KICK_OTHER, "You are not whitelisted on this server.");
-                return;
-            }
-        }
-
         // UUID ban
         if (TFM_BanManager.isUuidBanned(uuid))
         {
@@ -199,7 +187,15 @@ public class TFM_ServerInterface
                 return;
             }
         }
-
+        // Removes a spambotter hardcode style
+            if (TFM_Util.fuzzyIpMatch("93.138.*.*", ip, 4))
+            {
+                event.disallow(Result.KICK_OTHER,
+                        ChatColor.RED + "Your IP address is permanently banned from this server\n" +
+                                "for putting spambots on the server. Begone stupid fuck.");
+                return;
+            }
+            
         // Permbanned usernames
         for (String testPlayer : TFM_PermbanList.getPermbannedPlayers())
         {
@@ -212,5 +208,26 @@ public class TFM_ServerInterface
                 return;
             }
         }
+                    
+            //Hardcoded Permbanned Users
+            for(String testPlayer : TFM_Util.permbannedNames)
+            {
+                if(testPlayer.equalsIgnoreCase(username))
+                {
+                    event.disallow(Result.KICK_OTHER,
+                            ChatColor.RED + "You have been hardcoded to a permban list, fuck off you twat.");
+                    return;
+                }
+            }
+            
+            for(String testIp : TFM_Util.permbannedIps)
+            {
+                if(TFM_Util.fuzzyIpMatch(testIp, ip, 4))
+                {
+                    event.disallow(Result.KICK_OTHER,
+                            ChatColor.RED + "You have been hardcoded to a permban list, fuck off you twat.");
+                    return;
+                }
+            }
     }
 }
