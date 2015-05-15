@@ -31,6 +31,8 @@ public class TFM_AdminList
     private static final Set<UUID> telnetUUIDs;
     private static final Set<UUID> seniorUUIDs;
     private static final Set<String> seniorConsoleNames;
+    private static final Set<UUID> systemUUIDs;
+    private static final Set<UUID> executiveUUIDs;
     private static final Set<String> superIps;
     private static int cleanThreshold = 24 * 7; // 1 Week in hours
 
@@ -41,6 +43,8 @@ public class TFM_AdminList
         telnetUUIDs = new HashSet<UUID>();
         seniorUUIDs = new HashSet<UUID>();
         seniorConsoleNames = new HashSet<String>();
+        systemUUIDs = new HashSet<UUID>();
+        executiveUUIDs = new HashSet<UUID>();
         superIps = new HashSet<String>();
 
         SUPERADMIN_SERVICE = new Function<Player, Boolean>()
@@ -72,6 +76,16 @@ public class TFM_AdminList
     public static Set<UUID> getSeniorUUIDs()
     {
         return Collections.unmodifiableSet(seniorUUIDs);
+    }
+    
+    public static Set<UUID> getSystemUUIDs()
+    {
+        return Collections.unmodifiableSet(systemUUIDs);
+    }
+    
+    public static Set<UUID> getExecutiveUUIDs()
+    {
+        return Collections.unmodifiableSet(executiveUUIDs);
     }
 
     public static Set<String> getSeniorConsoleNames()
@@ -145,6 +159,8 @@ public class TFM_AdminList
                 admin.getCustomLoginMessage(),
                 admin.isTelnetAdmin(),
                 admin.isSeniorAdmin(),
+                admin.isSystemAdmin(),
+                admin.isSpecialExecutive(),
                 admin.isActivated());
         newAdmin.addIps(admin.getIps());
         adminList.put(newUuid, newAdmin);
@@ -205,6 +221,8 @@ public class TFM_AdminList
         superUUIDs.clear();
         telnetUUIDs.clear();
         seniorUUIDs.clear();
+        systemUUIDs.clear();
+        executiveUUIDs.clear();
         seniorConsoleNames.clear();
         superIps.clear();
 
@@ -227,6 +245,16 @@ public class TFM_AdminList
             if (admin.isTelnetAdmin())
             {
                 telnetUUIDs.add(uuid);
+            }
+            
+            if (admin.isSystemAdmin())
+            {
+                systemUUIDs.add(uuid);
+            }
+            
+            if (admin.isSpecialExecutive())
+            {
+                executiveUUIDs.add(uuid);
             }
 
             if (admin.isSeniorAdmin())
@@ -268,6 +296,8 @@ public class TFM_AdminList
             config.set("admins." + uuid + ".is_activated", section.getBoolean(admin + ".is_activated"));
             config.set("admins." + uuid + ".is_telnet_admin", section.getBoolean(admin + ".is_telnet_admin"));
             config.set("admins." + uuid + ".is_senior_admin", section.getBoolean(admin + ".is_senior_admin"));
+            config.set("admins." + uuid + ".is_system_admin", section.getBoolean(admin + ".is_system_admin"));
+            config.set("admins." + uuid + ".is_special_executive", section.getBoolean(admin + ".is_special_executive"));
             config.set("admins." + uuid + ".last_login", section.getString(admin + ".last_login"));
             config.set("admins." + uuid + ".custom_login_message", section.getString(admin + ".custom_login_message"));
             config.set("admins." + uuid + ".console_aliases", section.getStringList(admin + ".console_aliases"));
@@ -301,6 +331,8 @@ public class TFM_AdminList
             config.set("admins." + uuid + ".is_activated", superadmin.isActivated());
             config.set("admins." + uuid + ".is_telnet_admin", superadmin.isTelnetAdmin());
             config.set("admins." + uuid + ".is_senior_admin", superadmin.isSeniorAdmin());
+            config.set("admins." + uuid + ".is_system_admin", superadmin.isSystemAdmin());
+            config.set("admins." + uuid + ".is_special_executive", superadmin.isSpecialExecutive());
             config.set("admins." + uuid + ".last_login", TFM_Util.dateToString(superadmin.getLastLogin()));
             config.set("admins." + uuid + ".custom_login_message", superadmin.getCustomLoginMessage());
             config.set("admins." + uuid + ".console_aliases", TFM_Util.removeDuplicates(superadmin.getConsoleAliases()));
@@ -327,6 +359,8 @@ public class TFM_AdminList
         config.set("admins." + uuid + ".is_activated", admin.isActivated());
         config.set("admins." + uuid + ".is_telnet_admin", admin.isTelnetAdmin());
         config.set("admins." + uuid + ".is_senior_admin", admin.isSeniorAdmin());
+        config.set("admins." + uuid + ".is_system_admin", admin.isSystemAdmin());
+        config.set("admins." + uuid + ".is_special_executive", admin.isSpecialExecutive());
         config.set("admins." + uuid + ".last_login", TFM_Util.dateToString(admin.getLastLogin()));
         config.set("admins." + uuid + ".custom_login_message", admin.getCustomLoginMessage());
         config.set("admins." + uuid + ".console_aliases", TFM_Util.removeDuplicates(admin.getConsoleAliases()));
@@ -448,6 +482,54 @@ public class TFM_AdminList
         if (Bukkit.getOnlineMode() && superUUIDs.contains(TFM_UuidManager.getUniqueId(player)))
         {
             return true;
+        }
+
+        return false;
+    }
+    
+    public static boolean isSystemAdmin(CommandSender sender, boolean verifySuperadmin)
+    {
+        if (verifySuperadmin)
+        {
+            if (!isSuperAdmin(sender))
+            {
+                return false;
+            }
+        }
+
+        if (!(sender instanceof Player))
+        {
+            return true;
+        }
+
+        final TFM_Admin entry = getEntry((Player) sender);
+        if (entry != null)
+        {
+            return entry.isSystemAdmin();
+        }
+
+        return false;
+    }
+
+    public static boolean isSpecialExecutive(CommandSender sender, boolean verifySuperadmin)
+    {
+        if (verifySuperadmin)
+        {
+            if (!isSuperAdmin(sender))
+            {
+                return false;
+            }
+        }
+
+        if (!(sender instanceof Player))
+        {
+            return true;
+        }
+
+        final TFM_Admin entry = getEntry((Player) sender);
+        if (entry != null)
+        {
+            return entry.isSpecialExecutive();
         }
 
         return false;
@@ -634,6 +716,8 @@ public class TFM_AdminList
                 player.getName(),
                 new Date(),
                 "",
+                false,
+                false,
                 false,
                 false,
                 true);

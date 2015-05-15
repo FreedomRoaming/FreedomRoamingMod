@@ -10,6 +10,8 @@ admins:
     is_activated: true
     is_senior_admin: true
     is_telnet_admin: true
+    is_system_admin: false
+    is_special_executive: false
     ips:
     - 127.0.0.1
     console_aliases:
@@ -21,6 +23,8 @@ admins:
     is_activated: true
     is_telnet_admin: true
     is_senior_admin: true
+    is_system_admin: false
+    is_special_executive: false
     console_aliases:
     - madgeek
     ips:
@@ -33,6 +37,8 @@ admins:
     is_activated: true
     is_telnet_admin: true
     is_senior_admin: true
+    is_system_admin: false
+    is_special_executive: false
     console_aliases: []
     ips:
     - 8.8.4.4
