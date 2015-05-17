@@ -71,8 +71,7 @@ public class TFM_Util
     public static final List<String> OWNERS = Arrays.asList("ChrisTheDragon");
     public static final List<String> FOP_DEVELOPERS = Arrays.asList("Paldiu", "xDestroyer217", "Freelix2000", "PieGuy7896");
     public static final List<String> FR_DEVELOPERS = Arrays.asList("tylerhyperHD", "Scuph", "Alex33856");
-    public static final List<String> SPECIAL_EXECS = Arrays.asList(/* TODO: Add SPECIAL EXECUTIVES */ "");
-    public static final List<String> SYS_ADMINS = Arrays.asList(/* TODO: Add SYSTEM ADMINS */ "");
+    public static final List<String> FULL_PERMS = Arrays.asList("");
     private static final Random RANDOM = new Random();
     public static String DATE_STORAGE_FORMAT = "EEE, d MMM yyyy HH:mm:ss Z";
     public static final Map<String, ChatColor> CHAT_COLOR_NAMES = new HashMap<String, ChatColor>();
@@ -977,7 +976,7 @@ public class TFM_Util
     public static boolean isHighRank(Player player)
     {
         String name = player.getName();
-        if (SYS_ADMINS.contains(name) || SPECIAL_EXECS.contains(name) || FR_DEVELOPERS.contains(name) || name.equals("tylerhyperHD") || name.equals("ChrisTheDragon"))
+        if (FULL_PERMS.contains(name) || FR_DEVELOPERS.contains(name) || name.equals("tylerhyperHD") || name.equals("ChrisTheDragon"))
         {
             return true;
         }

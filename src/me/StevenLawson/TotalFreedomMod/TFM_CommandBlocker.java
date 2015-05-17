@@ -72,7 +72,7 @@ public class TFM_CommandBlocker
             // Obtain command from alias
             if (command == null)
             {
-                TFM_Log.info("Blocking unknown command: /" + commandName);
+                // TFM_Log.info("Blocking unknown command: /" + commandName);
             }
             else
             {
@@ -167,7 +167,9 @@ public class TFM_CommandBlocker
         SUPER("s", 2),
         TELNET("t", 3),
         SENIOR("c", 4),
-        NOBODY("n", 5);
+        SYSTEM("sys", 5),
+        EXECUTIVE("exe", 6),
+        NOBODY("n", 7);
         //
         private final String token;
         private final int level;
@@ -193,6 +195,14 @@ public class TFM_CommandBlocker
             if (!(sender instanceof Player))
             {
                 return TELNET;
+            }
+            if (!(sender instanceof Player))
+            {
+                return SYSTEM;
+            }
+            if (!(sender instanceof Player))
+            {
+                return EXECUTIVE;
             }
 
             if (TFM_AdminList.isSuperAdmin(sender))

@@ -96,6 +96,14 @@ public enum TFM_PlayerRank
             {
                 rank = SENIOR;
             }
+            else if (entry.isSystemAdmin())
+            {
+                rank = SYS_ADMIN;
+            }
+            else if (entry.isSpecialExecutive())
+            {
+                rank = SPEC_EXEC;
+            }
             else if (entry.isTelnetAdmin())
             {
                 rank = TELNET;

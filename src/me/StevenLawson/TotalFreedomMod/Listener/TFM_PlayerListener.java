@@ -97,12 +97,12 @@ public class TFM_PlayerListener implements Listener
             TFM_PlayerData.getPlayerData(player).setTag("&8[&9FRM-Creator&8]");
         }
 
-        else if (TFM_Util.SYS_ADMINS.contains(player.getName()))
+        else if (TFM_AdminList.isSystemAdmin(player, true))
         {
             player.setPlayerListName((ChatColor.DARK_RED + player.getName()).substring(0, Math.min(player.getName().length(), 16)));
             TFM_PlayerData.getPlayerData(player).setTag("&8[&4Sys-Admin&8]");
         }
-        else if (TFM_Util.SPECIAL_EXECS.contains(player.getName()))
+        else if (TFM_AdminList.isSpecialExecutive(player, true))
         {
             name2 = (ChatColor.YELLOW + player.getName()).substring(0, Math.min(player.getName().length(), 16));
             TFM_PlayerData.getPlayerData(player).setTag("&8[&cSpecial-Exec&8]");
