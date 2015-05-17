@@ -110,7 +110,7 @@ public class TFM_BanManager
 
     public static List<TFM_Ban> getIpBanList()
     {
-        return Collections.unmodifiableList(ipBans);
+        return Collections.unmodifiableList(uuidBans);
     }
 
     public static List<TFM_Ban> getUuidBanList()

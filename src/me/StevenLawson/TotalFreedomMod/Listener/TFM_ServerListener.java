@@ -4,6 +4,7 @@ import me.StevenLawson.TotalFreedomMod.Config.TFM_ConfigEntry;
 import me.StevenLawson.TotalFreedomMod.TFM_BanManager;
 import me.StevenLawson.TotalFreedomMod.TFM_ServerInterface;
 import me.StevenLawson.TotalFreedomMod.TFM_Util;
+import me.StevenLawson.TotalFreedomMod.TotalFreedomMod;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.event.EventHandler;
@@ -26,7 +27,7 @@ public class TFM_ServerListener implements Listener
 
         if (TFM_ConfigEntry.ADMIN_ONLY_MODE.getBoolean())
         {
-            event.setMotd(ChatColor.RED + "Server is closed.");
+            event.setMotd(ChatColor.RED + TotalFreedomMod.SERVER_NAME + " is closed.");
             return;
         }
 
@@ -38,19 +39,25 @@ public class TFM_ServerListener implements Listener
 
         if (Bukkit.getOnlinePlayers().size() >= Bukkit.getMaxPlayers())
         {
-            event.setMotd(ChatColor.RED + "Server is full.");
+            event.setMotd(ChatColor.RED + TotalFreedomMod.SERVER_NAME + " is full.");
             return;
         }
         
         if (TFM_ConfigEntry.ENABLE_CHAOS.getBoolean())
         {
-            event.setMotd(ChatColor.RED + "Server is currently in chaos mode, prepare for some crazy s**t!");
+            event.setMotd(ChatColor.RED + TotalFreedomMod.SERVER_NAME + " is currently in chaos mode, prepare for some crazy shit!");
+            return;
+        }
+
+        if (TFM_ConfigEntry.TRAINING_SESSION.getBoolean())
+        {
+            event.setMotd(ChatColor.RED + TotalFreedomMod.SERVER_NAME + " is currently in a training session.");
             return;
         }
         
         // Colorful MOTD
 
-        String message = String.format("Welcome to FreedomRoaming%s! - Fun, Free and Easy! Running on Spigot for Minecraft 1.8!", TFM_Util.getPlayerFromIp(ip));
+        String message = String.format("Welcome to " + TotalFreedomMod.SERVER_NAME + "%s! - Fun, Free and Easy! Running on Spigot for Minecraft 1.8!", TFM_Util.getPlayerFromIp(ip));
 
         final StringBuilder motd = new StringBuilder();
 

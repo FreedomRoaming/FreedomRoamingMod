@@ -25,6 +25,12 @@ public class Command_o extends TFM_Command
                 return true;
             }
 
+            final TFM_PlayerData playerdata = TFM_PlayerData.getPlayerDataSync(sender_p);
+            if (playerdata.inSeniorAdminChat())
+            {
+                playerMsg("You are already in senior admin chat! Toggle that first before going to Regular Admin chat!");
+                return true;
+            }
             TFM_PlayerData userinfo = TFM_PlayerData.getPlayerData(sender_p);
             userinfo.setAdminChat(!userinfo.inAdminChat());
             playerMsg("Toggled Admin Chat " + (userinfo.inAdminChat() ? "on" : "off") + ".");

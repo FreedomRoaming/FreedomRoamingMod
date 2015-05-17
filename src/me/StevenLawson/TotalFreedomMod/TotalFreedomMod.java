@@ -45,6 +45,7 @@ public class TotalFreedomMod extends JavaPlugin
     public static final String PROTECTED_AREA_FILENAME = "protectedareas.dat";
     public static final String SAVED_FLAGS_FILENAME = "savedflags.dat";
     //
+    public static final String SERVER_NAME = "FreedomRoaming";
     public static final String MOD_NAME = "FreedomRoamingMod";
     public static final String OWNER = "ChrisTheDragon";
     public static final String MSG_NO_PERMS = ChatColor.YELLOW + "You do not have permission to use this command.";

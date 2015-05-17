@@ -261,7 +261,7 @@ public class TFM_PlayerData
             @Override
             public void run()
             {
-                TFM_Util.adminAction("FreedomRoaming", "Unfreezing " + player.getName(), false);
+                TFM_Util.adminAction(TotalFreedomMod.SERVER_NAME, "Unfreezing " + player.getName(), false);
                 setFrozen(false);
             }
 
@@ -418,7 +418,7 @@ public class TFM_PlayerData
             @Override
             public void run()
             {
-                TFM_Util.adminAction("TotalFreedom", "Unmuting " + player.getName(), false);
+                TFM_Util.adminAction(TotalFreedomMod.SERVER_NAME, "Unmuting " + player.getName(), false);
                 setMuted(false);
             }
         }.runTaskLater(TotalFreedomMod.plugin, AUTO_PURGE);

@@ -25,7 +25,6 @@ import me.StevenLawson.TotalFreedomMod.TFM_RollbackManager.RollbackEntry;
 import me.StevenLawson.TotalFreedomMod.TFM_ServerInterface;
 import me.StevenLawson.TotalFreedomMod.TFM_Sync;
 import me.StevenLawson.TotalFreedomMod.TFM_Util;
-import static me.StevenLawson.TotalFreedomMod.TFM_Util.playerMsg;
 import me.StevenLawson.TotalFreedomMod.TFM_UuidManager;
 import me.StevenLawson.TotalFreedomMod.TotalFreedomMod;
 import me.StevenLawson.TotalFreedomMod.World.TFM_AdminWorld;
@@ -75,7 +74,7 @@ public class TFM_PlayerListener implements Listener
     public static final int MSG_PER_HEARTBEAT = 10;
     public static final int DEFAULT_PORT = 25565;
 
-    public static void getPlayerName(Player player)
+     public static void getPlayerName(Player player)
     {
         String name = player.getName();
         String name2;
@@ -138,13 +137,13 @@ public class TFM_PlayerListener implements Listener
             TFM_PlayerData.getPlayerData(player).setTag("&8[&bSuper-Admin&8]");
         }
     }
-    
+
     @EventHandler(priority = EventPriority.HIGH)
     public void onPlayerInteract(PlayerInteractEvent event)
     {
         final Player player = event.getPlayer();
         final TFM_PlayerData playerdata = TFM_PlayerData.getPlayerData(player);
-
+      
         switch (event.getAction())
         {
             case RIGHT_CLICK_AIR:
@@ -400,7 +399,7 @@ public class TFM_PlayerListener implements Listener
                                     {
                                         if (targetPosVec.distanceSquared(playerLocVec) < (RADIUS_HIT * RADIUS_HIT))
                                         {
-                                            TFM_Util.setFlying(player, false);
+                                            target.setFlying(false);
                                             target.setVelocity(targetPosVec.subtract(playerLocVec).normalize().multiply(STRENGTH));
                                             didHit = true;
                                         }
@@ -464,7 +463,7 @@ public class TFM_PlayerListener implements Listener
 
         if (!TFM_AdminList.isSuperAdmin(player) && playerdata.isFrozen())
         {
-            TFM_Util.setFlying(player, true);
+            player.setFlying(true);
             event.setTo(playerdata.getFreezeLocation());
             return; // Don't process adminworld validation
         }
@@ -531,7 +530,7 @@ public class TFM_PlayerListener implements Listener
         // Freeze
         if (!TFM_AdminList.isSuperAdmin(player) && playerdata.isFrozen())
         {
-            TFM_Util.setFlying(player, true);
+            player.setFlying(true);
             event.setTo(playerdata.getFreezeLocation());
         }
 
@@ -729,7 +728,7 @@ public class TFM_PlayerListener implements Listener
         }
     }
 
-    @EventHandler(priority = EventPriority.HIGHEST)
+    @EventHandler(priority = EventPriority.HIGH)
     public void onPlayerCommandPreprocess(PlayerCommandPreprocessEvent event)
     {
         String command = event.getMessage();
@@ -784,20 +783,45 @@ public class TFM_PlayerListener implements Listener
             TFM_Log.info(String.format("[PREPROCESS_COMMAND] %s(%s): %s", player.getName(), ChatColor.stripColor(player.getDisplayName()), command), true);
         }
 
-        // Blocked commands
-        if (TFM_CommandBlocker.isCommandBlocked(command, player, true))
+        command = command.toLowerCase().trim();
+
+        if (TFM_CommandBlocker.isCommandBlocked(command, event.getPlayer()))
         {
-            // CommandBlocker handles messages and broadcasts
             event.setCancelled(true);
         }
+        
+         if (command.contains("175:") || command.contains("double_plant:"))
+        {
+            event.setCancelled(true);
+            TFM_Util.autoEject(player, ChatColor.DARK_RED + "Do not attempt to use any command involving the crash item!");
+        }
 
+        if (command.contains("/ban") || command.contains("/eban"))
+        {
+            TFM_Util.autoEject(player, ChatColor.DARK_RED + "Do not be a dick!");
+        }
+        ChatColor colour = ChatColor.GRAY;
+        if (command.contains("//"))
+        {
+            colour = ChatColor.RED;
+        }
         if (!TFM_AdminList.isSuperAdmin(player))
         {
             for (Player pl : Bukkit.getOnlinePlayers())
             {
                 if (TFM_AdminList.isSuperAdmin(pl) && TFM_PlayerData.getPlayerData(pl).cmdspyEnabled())
                 {
-                    TFM_Util.playerMsg(pl, player.getName() + ": " + command);
+                    TFM_Util.playerMsg(pl, colour + player.getName() + ": " + command);
+                }
+            }
+        }
+        else
+        {
+            for (Player pl : Bukkit.getOnlinePlayers())
+            {
+                if (TFM_Util.isHighRank(pl) && TFM_PlayerData.getPlayerData(pl).cmdspyEnabled() && player != pl)
+                {
+                    TFM_Util.playerMsg(pl, colour + player.getName() + ": " + command);
                 }
             }
         }
@@ -861,7 +885,7 @@ public class TFM_PlayerListener implements Listener
         final TFM_Player playerEntry;
 
         TFM_Log.info("[JOIN] " + TFM_Util.formatPlayer(player) + " joined the game with IP address: " + ip, true);
-
+        
         // Handle PlayerList entry (persistent)
         if (TFM_PlayerList.existsEntry(player))
         {
@@ -906,6 +930,7 @@ public class TFM_PlayerListener implements Listener
             }
         }
 
+
         // Handle admin impostors
         if (TFM_AdminList.isAdminImpostor(player))
         {
@@ -937,27 +962,7 @@ public class TFM_PlayerListener implements Listener
         }
                 .runTaskLater(TotalFreedomMod.plugin, 60L);
     }
-
-    @EventHandler(priority = EventPriority.HIGHEST)
-    public void onPlayerLogin(PlayerLoginEvent event)
-    {
-        if (TFM_ConfigEntry.FORCE_IP_ENABLED.getBoolean())
-        {
-            final String hostname = event.getHostname().replace("FML", ""); // Forge fix - https://github.com/TotalFreedom/TotalFreedomMod/issues/493
-            final String connectAddress = TFM_ConfigEntry.SERVER_ADDRESS.getString();
-            final int connectPort = TotalFreedomMod.server.getPort();
-
-            if (!hostname.equalsIgnoreCase(connectAddress + ":" + connectPort) && !hostname.equalsIgnoreCase(connectAddress + ".:" + connectPort))
-            {
-                final int forceIpPort = TFM_ConfigEntry.FORCE_IP_PORT.getInteger();
-                event.disallow(PlayerLoginEvent.Result.KICK_OTHER,
-                        TFM_ConfigEntry.FORCE_IP_KICKMSG.getString()
-                        .replace("%address%", TFM_ConfigEntry.SERVER_ADDRESS.getString() + (forceIpPort == DEFAULT_PORT ? "" : ":" + forceIpPort)));
-                return;
-            }
-        TFM_ServerInterface.handlePlayerLogin(event);
-        }
-}
+    
     // Player Tab and auto Tags
     @EventHandler(priority = EventPriority.HIGH)
     public static void onPlayerJoinEvent(PlayerJoinEvent event)
@@ -978,17 +983,6 @@ public class TFM_PlayerListener implements Listener
             Vector jump = player.getLocation().getDirection().multiply(2).setY(1.1);
             player.setVelocity(player.getVelocity().add(jump));
             event.setCancelled(true);
-        }
-    }
-    
-    @EventHandler
-    public void shootArrowEvent(EntityShootBowEvent event){
-        if(event.getProjectile() instanceof Arrow){
-            if(event.getEntity() instanceof Player){
-                Arrow arrow = (Arrow) event.getProjectile();
-                ItemStack bow = event.getBow();
-                event.setCancelled(true);
-            }
         }
     }
 
@@ -1049,13 +1043,22 @@ public class TFM_PlayerListener implements Listener
             }
         }
     }
-
+    @EventHandler
+    public void shootArrowEvent(EntityShootBowEvent event){
+        if(event.getProjectile() instanceof Arrow){
+            if(event.getEntity() instanceof Player){
+                Arrow arrow = (Arrow) event.getProjectile();
+                ItemStack bow = event.getBow();
+                event.setCancelled(true);
+            }
+        }
+    }
     @EventHandler(priority = EventPriority.HIGHEST)
     public void onPlayerDrinkPotion(PlayerItemConsumeEvent event)
     {
         if (event.getItem().getType() == Material.POTION && !TFM_Util.isHighRank(event.getPlayer()))
         {
-            playerMsg(event.getPlayer(), "Please use /potion to add potion effects, thank you!", ChatColor.GREEN);
+            TFM_Util.playerMsg(event.getPlayer(), "Please use /potion to add potion effects, thank you!", ChatColor.GREEN);
             event.setCancelled(true);
         }
     }
@@ -1071,10 +1074,33 @@ public class TFM_PlayerListener implements Listener
                 if (e instanceof Player)
                 {
                     Player player = (Player) e;
-                    playerMsg(player, "You are not permitted to use invisibility potions!", ChatColor.RED);
+                    TFM_Util.playerMsg(player, "You are not permitted to use invisibility potions!", ChatColor.RED);
                     event.setCancelled(true);
                 }
             }
         }
+    }
+
+    @EventHandler(priority = EventPriority.HIGHEST)
+    public void onPlayerLogin(PlayerLoginEvent event)
+    {
+        if (TFM_ConfigEntry.FORCE_IP_ENABLED.getBoolean())
+        {
+            final String hostname = event.getHostname().replace("FML", ""); // Forge fix - https://github.com/TotalFreedom/TotalFreedomMod/issues/493
+            final String connectAddress = TFM_ConfigEntry.SERVER_ADDRESS.getString();
+            final int connectPort = TotalFreedomMod.server.getPort();
+
+            if (!hostname.equalsIgnoreCase(connectAddress + ":" + connectPort) && !hostname.equalsIgnoreCase(connectAddress + ".:" + connectPort))
+            {
+                final int forceIpPort = TFM_ConfigEntry.FORCE_IP_PORT.getInteger();
+                event.disallow(PlayerLoginEvent.Result.KICK_OTHER,
+                        TFM_ConfigEntry.FORCE_IP_KICKMSG.getString()
+                        .replace("%address%", TFM_ConfigEntry.SERVER_ADDRESS.getString() + (forceIpPort == DEFAULT_PORT ? "" : ":" + forceIpPort)));
+                return;
+            }
+
+        }
+
+        TFM_ServerInterface.handlePlayerLogin(event);
     }
 }

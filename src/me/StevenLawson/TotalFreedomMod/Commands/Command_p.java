@@ -25,7 +25,13 @@ public class Command_p extends TFM_Command
                 playerMsg("Only in-game players can toggle Senior Admin Chat.");
                 return true;
             }
-
+            final TFM_PlayerData playerdata = TFM_PlayerData.getPlayerDataSync(sender_p);
+            if (playerdata.inAdminChat())
+            {
+                playerMsg("You are already in regular admin chat! Toggle that first before going to Senior Admin chat!");
+                return true;
+            }
+            
             TFM_PlayerData userinfo = TFM_PlayerData.getPlayerData(sender_p);
             userinfo.setSeniorAdminChat(!userinfo.inSeniorAdminChat());
             playerMsg("Toggled Senior Admin Chat " + (userinfo.inSeniorAdminChat() ? "on" : "off") + ".", ChatColor.GREEN);

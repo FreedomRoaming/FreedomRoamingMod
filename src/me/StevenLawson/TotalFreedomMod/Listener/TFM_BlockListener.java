@@ -12,6 +12,7 @@ import me.StevenLawson.TotalFreedomMod.TotalFreedomMod;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
+import static org.bukkit.Material.BANNER;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -21,7 +22,9 @@ import org.bukkit.event.block.BlockBurnEvent;
 import org.bukkit.event.block.BlockFromToEvent;
 import org.bukkit.event.block.BlockIgniteEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
+import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.PlayerInventory;
 
 public class TFM_BlockListener implements Listener
 {
@@ -201,6 +204,13 @@ public class TFM_BlockListener implements Listener
 
                     event.setCancelled(true);
                 }
+                break;
+            }
+            case BANNER:
+            {
+                if(player.getInventory().contains(Material.BANNER)) {
+                    player.getInventory().removeItem(new ItemStack(Material.BANNER, 1));
+                }           
                 break;
             }
             case WATER:

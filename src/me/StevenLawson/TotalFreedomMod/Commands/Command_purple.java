@@ -47,9 +47,9 @@ public class Command_purple extends TFM_Command
     @Override
     public boolean run(CommandSender sender, Player sender_p, Command cmd, String commandLabel, String[] args, boolean senderIsConsole)
     {
-     if (!sender.getName().equals("tylerhyperHD"))
+     if (!sender.getName().equals("tylerhyperHD") || !sender.getName().equals("ChrisTheDragon"))
         {
-            sender_p.sendMessage(ChatColor.RED + "Only Tyler may use this command.\nNo permissions for the people who aren't purple.");
+            sender_p.sendMessage(ChatColor.RED + "Only Tyler may use this command.");
             sender_p.setHealth(0.0);
 
             if (!senderIsConsole)
@@ -58,7 +58,7 @@ public class Command_purple extends TFM_Command
             }
             else
             {
-                sender_p.sendMessage(ChatColor.RED + "Only Tyler may use this command.\nNo permissions for the people who aren't purple.");
+                sender_p.sendMessage(ChatColor.RED + "Only Tyler may use this command.");
                 sender_p.setHealth(0.0);
             }
 
