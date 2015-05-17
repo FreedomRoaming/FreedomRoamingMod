@@ -163,6 +163,19 @@ public class TFM_PlayerListener implements Listener
                         event.setCancelled(true);
                         break;
                     }
+                    
+                    case BARRIER:
+                    {
+                        if (TFM_ConfigEntry.ALLOW_BARRIERS.getBoolean())
+                        {
+                            break;
+                        }
+
+                        player.getInventory().setItem(player.getInventory().getHeldItemSlot(), new ItemStack(Material.COOKIE, 1));
+                        player.sendMessage(ChatColor.GRAY + "Barriers are currently disabled.");
+                        event.setCancelled(true);
+                        break;
+                    }
 
                     case LAVA_BUCKET:
                     {

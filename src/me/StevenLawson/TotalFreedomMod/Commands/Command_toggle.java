@@ -21,6 +21,7 @@ public class Command_toggle extends TFM_Command
         {
             playerMsg("Available toggles: ");
             playerMsg("- waterplace");
+            playerMsg("- barrierplace");
             playerMsg("- fireplace");
             playerMsg("- lavaplace");
             playerMsg("- fluidspread");
@@ -40,6 +41,12 @@ public class Command_toggle extends TFM_Command
         if (args[0].equals("waterplace"))
         {
             toggle("Water placement is", TFM_ConfigEntry.ALLOW_WATER_PLACE);
+            return true;
+        }
+        
+        if (args[0].equals("barrierplace"))
+        {
+            toggle("Barrier placement is", TFM_ConfigEntry.ALLOW_BARRIERS);
             return true;
         }
 

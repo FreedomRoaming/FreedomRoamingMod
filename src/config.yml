@@ -34,6 +34,7 @@ forceip:
 # Blocking certain events
 allow:
   fire_place: false
+  barriers: false
   fire_spread: false
   fluid_spread: false
   lava_place: false
